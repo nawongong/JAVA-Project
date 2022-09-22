@@ -1,0 +1,8 @@
+package Main;
+
+// 보험계약 메인 화면
+public class MainForm {
+	public MainForm() {
+		
+	}
+}

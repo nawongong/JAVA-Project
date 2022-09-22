@@ -1,0 +1,15 @@
+package DB;
+
+import java.sql.Connection;
+
+// 테이블에 데이터 삽입, 데이터파일에 있는 txt파일 이용
+public class InsertDB {
+	public InsertDB() {
+		// 데이터베이스 연결
+		Connection con = Driver_con.Driver_con();
+		// 테이블 삽입 명령어 배열
+		String [] sql = {};
+		// 파일 이름 배열
+		String [] filename = {"admin", "customer", "contract"};
+	}
+}

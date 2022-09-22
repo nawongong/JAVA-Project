@@ -1,0 +1,11 @@
+package DB;
+
+// 데이터베이스가 생성되고, 테이블이 생성되고, 테이블 안에 데이터가 삽입될 메인
+public class DBMain {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

@@ -1,0 +1,41 @@
+package Main;
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+
+// 고객등록 폼 메인폼->고객등록
+public class InsertCustomerForm extends JFrame{
+	// 라벨 문자열 배열
+	private String [] s = {"고객 코드:", "*고객 명:", "*생년월일(YYYY-MM-DD):", "*연락처:", "주소:", "회사:"};
+	// 입력받을 창 배열
+	private static JTextField [] textfield;
+	public InsertCustomerForm() {
+		setTitle("고객 등록");
+		// x버튼을 클릭했을 때 메인폼으로
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {new MainForm();}
+		});
+		
+		Container c = getContentPane();
+		
+		c.add(new CenterP(), BorderLayout.CENTER);
+		c.add(new SouthP(), BorderLayout.CENTER);
+		
+		setSize(500,300);
+		setVisible(true);
+	}
+	// 중간
+	class CenterP extends JPanel{
+		public CenterP() {
+			this.setLayout(new GridLayout(6,2)); // 2행 6열
+			
+		}
+	}
+	// 하단
+	class SouthP extends JPanel{
+		public SouthP() {
+			
+		}
+	}
+}

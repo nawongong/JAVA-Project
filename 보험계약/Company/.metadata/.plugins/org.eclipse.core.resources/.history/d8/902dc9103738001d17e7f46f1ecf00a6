@@ -1,0 +1,55 @@
+package Main;
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+
+// 제일 처음 실행될 화면, 관리자 로그인 화면
+public class AdminLoginForm extends JFrame{
+	JTextField name; // 이름
+	JPasswordField pw;  // 비밀번호
+	String [] btns_s = {"확인","종료"};
+	JButton [] btns; // 버튼들
+	public AdminLoginForm() {
+		setTitle("로그인");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Container c = getContentPane();
+		
+		c.add(new NorthP(), BorderLayout.NORTH);
+		c.add(new CenterP(), BorderLayout.CENTER);
+	}
+	// 상단
+	class NorthP extends JPanel{
+		public NorthP() {
+			// 타이틀
+			this.add(new JLabel("관리자 로그인"));
+		}
+	}
+	// 중간
+	class CenterP extends JPanel{
+		public CenterP() {
+			this.setLayout(new GridLayout(2,2,0,10));
+			
+			// 이름 라벨 + 이름 입력창
+			this.add(new JLabel("이름"));
+			name = new JTextField(10);
+			this.add(name);
+			
+			// 비밀번호 라벨 + 비밀번호 입력창
+			this.add(new JLabel("비밀번호"));
+			pw = new JPasswordField(10);
+			this.add(pw);
+		}
+	}
+	// 하단
+	class SouthP extends JPanel{
+		public SouthP() {
+			
+		}
+	}
+	// 버튼 이벤트
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

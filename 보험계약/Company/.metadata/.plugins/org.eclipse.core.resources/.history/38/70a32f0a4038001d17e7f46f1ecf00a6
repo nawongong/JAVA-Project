@@ -1,0 +1,81 @@
+// datePicker
+// https://blog.eduonix.com/java-programming-2/how-to-use-date-picker-component-in-java/ 
+package Main;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.Calendar;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+// 고객등록 폼 메인폼->고객등록
+public class InsertCustomerForm extends JFrame{
+	// 라벨 문자열 배열
+	private String [] s = {"고객 코드:", "*고객 명:", "*생년월일(YYYY-MM-DD):", "*연락처:", "주소:", "회사:"};
+	// 입력받을 창 배열
+	private JTextField [] field;
+	private String [] btns_s = {"추가", "닫기"};
+	public InsertCustomerForm() {
+		setTitle("고객 등록");
+		// x버튼을 클릭했을 때 메인폼으로
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {new MainForm();}
+		});
+		
+		Container c = getContentPane();
+		
+		c.add(new CenterP(), BorderLayout.CENTER);
+		c.add(new SouthP(), BorderLayout.CENTER);
+		
+		setSize(500,300);
+		setVisible(true);
+	}
+	// 중간, 입력받는 부분
+	class CenterP extends JPanel{
+		public CenterP() {
+			this.setLayout(new GridLayout(6,2)); // 2행 6열
+			JLabel [] label = new JLabel[s.length]; 
+			field = new JTextField[s.length];
+			for(int i=0; i<s.length; i++) {
+				label[i] = new JLabel(s[i]);
+				field[i] = new JTextField(10);
+				if(i==0) {
+					// 고객코드는 직접입력 X
+					field[i].setFocusable(false);
+					field[i].setEnabled(false);
+				}
+				if(i==2) {
+					// 생년월일 입력받으면 자동으로 고객코드 생성
+					field[i].addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							// TODO Auto-generated method stub
+							Calendar cal = Calendar.getInstance(); // 날짜 가져오기
+							int year = cal.get(Calendar.YEAR)-2000; // 현재년도에서 십의자리만
+							String str[] = field[2].getText().split("-"); // 입력
+							int hap = Integer.valueOf(str[0]) + Integer.valueOf(str[1]) + Integer.valueOf(str[2]);
+							field[0].setText("S" + year + hap);
+							// 고객코드 S + 현재년도 + 생년월일
+						}
+					});
+				}
+				this.add(label[i]);
+				this.add(field[i]);
+			}
+		}
+	}
+	// 하단, 버튼들
+	class SouthP extends JPanel{
+		public SouthP() {
+			
+		}
+	}
+}

@@ -1,0 +1,73 @@
+package Main;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+// 보험계약 메인 화면
+public class MainForm extends JFrame{
+	public MainForm() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("보험계약 관리 화면");
+		Container c = getContentPane();
+		
+		c.add(new NorthP(), BorderLayout.NORTH);
+		c.add(new CenterP(),BorderLayout.CENTER);
+		
+		setSize(600, 500);
+		setVisible(true);
+	}
+	class NorthP extends JPanel{
+		public NorthP() {
+			JButton insertbtn = new JButton("고객등록");
+			JButton selectbtn = new JButton("고객조회");
+			JButton managebtn = new JButton("계약관리");
+			JButton exitbtn = new JButton("종료");
+			
+			insertbtn.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+			selectbtn.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+			managebtn.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+			exitbtn.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					dispose();
+				}
+			});
+			this.add(insertbtn);
+			this.add(selectbtn);
+			this.add(managebtn);
+			this.add(exitbtn);
+		}
+	}
+	class CenterP extends JPanel{
+		public CenterP() {
+			
+			ImageIcon img = new ImageIcon("img/img.jpg");
+			JLabel image = new JLabel();
+			image.setIcon(img);
+			this.add(image);
+		}
+	}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		new MainForm();
+	}
+}

@@ -1,0 +1,81 @@
+package Main;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
+import java.awt.event.*;
+import java.util.Vector;
+
+public class SelectCustomerForm extends JFrame{
+	private static JTextField name; // 이름 입력창
+	private static JTable jt; // 조회된 결과를 보여주는 테이블
+	private String [] s = {"code","name","birth","tel","address","company"}; // 컬럼명
+	private Vector<String> colData = new Vector<String>(); 
+	private Vector<Vector<String>> rowData = new Vector<Vector<String>>();
+	public SelectCustomerForm() {
+		setTitle("고객조회");
+		// x버튼을 클릭했을 때 메인폼으로
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {new MainForm();}
+		});
+		
+		// 테이블 생성
+		for(int i=0; i<s.length; i++) {colData.add(s[i]);}
+		DefaultTableModel model = new DefaultTableModel(rowData,colData);
+		jt = new JTable(model);
+		JScrollPane jsp = new JScrollPane(jt);
+		
+		
+		getContentPane().add(new NorthP(), BorderLayout.NORTH);
+		getContentPane().add(jsp, BorderLayout.CENTER);
+		
+		setSize(800,600);
+		setVisible(true);
+	}
+	//상단
+	class NorthP extends JPanel{
+		String [] btns = {"조회","전체보기","수정","삭제","닫기"}; // 버튼 텍스트 배열
+		public NorthP() {
+			this.add(new JLabel("성명"));
+			name = new JTextField(15);
+			this.add(name);
+			
+			// 버튼 추가
+			JButton [] btn = new JButton[btns.length];
+			for(int i=0; i<btn.length; i++) {
+				btn[i] = new JButton(btns[i]);
+				btn[i].addActionListener(new BtnListener(i));
+				this.add(btn[i]);
+			}
+		}
+	}
+	
+	// 버튼 이벤트 리스너
+	class BtnListener implements ActionListener{
+		int i;
+		public BtnListener(int i) {this.i = i;}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			switch(i) {
+				case 0: // 조회
+					break;
+				case 1: // 전체보기
+					break;
+				case 2: // 수정
+					break;
+				case 3: // 삭제
+					break;
+				case 4: // 닫기
+					dispose();
+					new MainForm(); // 메인폼으로
+					break;
+			}
+		}
+	}
+	// 검색
+	// 전체보기
+	// 수정
+	// 삭제
+	
+}

@@ -1,0 +1,71 @@
+package Main;
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+import java.util.Vector;
+
+public class UpdateCustomerForm extends JFrame{
+	private Vector<String> vc; // 가져온 데이터 벡터
+	private JTextField [] field; // 입력받을 창
+	public UpdateCustomerForm(Vector<String> vc) {
+		this.vc = vc;
+		setTitle("고객수정");
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		
+		setSize(500, 300);
+		setVisible(true);
+	}
+	// 중간
+	class CenterP extends JPanel{
+		public CenterP() {
+			this.setLayout(new GridLayout(6,2)); // 2행 6열
+			
+			String [] s = {"고객 코드:", "*고객 명:", "*생년월일(YYYY-MM-DD):", "*연락처:", "주소:", "회사:"};
+			JLabel [] label = new JLabel[s.length];
+			field = new JTextField[s.length];
+			
+			for(int i=0; i<s.length; i++) {
+				label[i] = new JLabel(s[i]);
+				field[i] = new JTextField(10);
+				// 고객코드랑 고객명은 수정 불가, 입력된 데이터 불러와서 입력폼에 넣기
+				if(i==0 || i==1) {
+					field[i].setFocusable(false);
+					field[i].setEnabled(false);
+					field[i].setText(vc.get(i));
+				}else {
+					field[i].setText(vc.get(i));
+				}
+				this.add(label[i]);
+				this.add(field[i]);
+			}
+		}
+	}
+	// 하단
+	class SouthP extends JPanel{
+		public SouthP() {
+			String [] btns_s = {"수정", "취소"};
+			JButton [] btns = new JButton[btns_s.length];
+			
+			for(int i=0; i<btns.length; i++) {
+				btns[i] = new JButton(btns_s[i]);
+				btns[i].addActionListener(new BtnListener());
+			}
+		}
+	}
+	// 버튼 이벤트리스너
+	class BtnListener implements ActionListener{
+		int i;
+		public BtnListener() {this.i= i;}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			switch(i) {
+				case 0: // 수정
+					
+					break;
+				case 1: // 취소
+					dispose();
+					break;
+			}
+		}
+	}
+}

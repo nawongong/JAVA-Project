@@ -1,0 +1,23 @@
+package Main;
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+
+// 고객등록 폼 메인폼->고객등록
+public class InsertCustomerForm extends JFrame{
+	public InsertCustomerForm() {
+		setTitle("고객 등록");
+		// x버튼을 클릭했을 때 메인폼으로
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				new MainForm();
+			}
+		});
+		Container c = getContentPane();
+		
+		setSize(500,300);
+		setVisible(true);
+	}
+	// 상단
+}

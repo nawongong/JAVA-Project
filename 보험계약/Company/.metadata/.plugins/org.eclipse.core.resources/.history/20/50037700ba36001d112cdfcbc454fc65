@@ -1,0 +1,23 @@
+package DB;
+
+// 데이터베이스와 테이블이 생성될 클래스
+public class DBCreate {
+	public DBCreate() {
+		String url = "jdbc:mysql://localhost";
+		String id = "root";
+		String pw = "1234";
+		// 데이터베이스 생성 명령어, company라는 데이터베이스가 존재하지 않으면 생성
+		String createdb = "create database if not exists company";
+		// company 데이터베이스 사용 
+		String usedb = "use company";
+		
+		//테이블 생성
+		String [] createtb = {"admin("}
+		// 테이블 생성
+				String [] createtb = {"member(memberNo int primary key not null auto_increment, memberName varchar(20), passwd varchar(4))",
+										"cuisine(cuisineNo int primary key not null auto_increment, cuisineName varchar(10))",
+										"meal(mealNo int primary key not null auto_increment, cuisineNo int, mealName varchar(20), price int, maxCount int, todayMeal tinyint(1))",
+										"orderlist(orderNo int primary key not null auto_increment, cuisineNo int, mealNo int, memberNo int, orderCount int, amount int, orderDate datetime)"
+									};
+	}
+}

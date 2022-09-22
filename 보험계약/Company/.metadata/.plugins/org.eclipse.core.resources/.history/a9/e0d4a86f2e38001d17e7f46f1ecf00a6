@@ -1,0 +1,22 @@
+package Main;
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+
+// 제일 처음 실행될 화면, 관리자 로그인 화면
+public class AdminLoginForm extends JFrame{
+	public AdminLoginForm() {
+		setTitle("로그인");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Container c = getContentPane();
+		
+		JPanel jp1 = new JPanel();
+		jp1.add(new JLabel("관리자 로그인"));
+		
+	}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

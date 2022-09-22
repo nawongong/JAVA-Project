@@ -1,0 +1,6 @@
+package DB;
+
+// 데이터베이스가 생성될 클래스
+public class DBCreate {
+	
+}

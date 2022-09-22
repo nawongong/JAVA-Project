@@ -1,0 +1,74 @@
+package Main;
+import java.awt.GridLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Vector;
+
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+
+// 계약관리폼
+public class ManageCustomerForm extends JFrame{
+	private JComboBox combo1; // 고객명 콤보박스
+	private JComboBox combo2; // 보험상품 콤보박스
+	private JComboBox combo3; // 담당자 콤보박스
+	private JTextField [] jf1; // 왼쪽 입력폼
+	private JTextField [] jf2; // 오른쪽 입력폼
+	private JTable jt; // 조회된 결과값을 넣을 테이블
+	private Vector<String> colData = new Vector<String>(); // 컬럼명
+	private Vector<Vector<String>> rowData = new Vector<Vector<String>>(); // 데이터가 들어갈 벡터
+	private Connection con = Driver_con.Driver_con(); // 데이터베이스 연결
+	public ManageCustomerForm() {
+		setTitle("보험 계약");
+		// x버튼을 클릭했을 때 메인폼으로
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {new MainForm();}
+		});
+		
+		setSize(600,600);
+		setVisible(true);
+	}
+	// sql문에 해당하는 데이터값을 반환하는 함수
+	public Vector<String> ReVector(String sql) {
+		Vector<String> v = new Vector<String>();
+		try {
+			Statement st = (Statement) con.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			while(rs.next()) {
+				v.add(rs.getString(1));
+				//System.out.println(rs.getString(1));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return v;
+	}
+	// 상단
+	class NorthP extends JPanel{
+		public NorthP() {
+			this.setLayout(new GridLayout(2,1,40,0)); // 2행 1열 hgap 40
+			JPanel panel = new JPanel(); // 입력폼이 들어갈 panel
+			panel.setLayout(new GridLayout(1,2,40,0)); // 1행 2열
+			
+		}
+	}
+	// 입력폼이 들어갈 panel1
+	class Panel1 extends JPanel{
+		String [] s = {"고객코드:", "고객명:", "생년월일:", "연락처"};
+		String sql = "select name from customer"; // 고객명을 뽑아낼 sql문
+		public Panel1() {
+			this.setLayout(new GridLayout(4,2,10,0)); // 4행 2열 hgap 10
+			combo1 = new JComboBox(ReVector(sql)); // combobox에 빼온 데이터값 추가
+			
+		}
+	}
+}

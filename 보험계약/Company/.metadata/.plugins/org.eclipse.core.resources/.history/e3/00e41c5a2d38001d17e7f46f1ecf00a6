@@ -1,0 +1,61 @@
+package Main;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+// 보험계약 메인 화면
+public class MainForm extends JFrame{
+	String [] s = {"고객등록","고객조회","계약관리","종료"}; // 버튼들 안의 텍스트
+	JButton [] btns; // 버튼들
+	public MainForm() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("보험계약 관리 화면");
+		Container c = getContentPane();
+		
+		c.add(new NorthP(), BorderLayout.NORTH);
+		c.add(new CenterP(),BorderLayout.CENTER);
+		
+		setSize(600, 500);
+		setVisible(true);
+	}
+	// 위쪽 panel, 버튼들이 담길 곳
+	class NorthP extends JPanel{
+		public NorthP() {
+			btns = new JButton[s.length];
+			for(int i=0; i<s.length; i++) {
+				btns[i] = new JButton(s[i]);
+				switch(i) {
+					case 1:
+						btns[i].addActionListener(new BtnListener(i));
+				}
+				this.add(btns[i]);
+			}
+		}
+	}
+	// 버튼 이벤트 리스너
+	class BtnListener implements ActionListener{
+		int i; 
+		public BtnListener(int i) {
+			this.i = i;
+		}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			System.out.println(i);
+		}
+	}
+	// 중간에 이미지가 담길 곳
+	class CenterP extends JPanel{
+		public CenterP() {
+			ImageIcon img = new ImageIcon(getClass().getClassLoader().getResource("img.jpg"));
+			JLabel image = new JLabel();
+			image.setIcon(img);
+			this.add(image);
+		}
+	}
+	// 메인 폼 실행, 메인 폼에서만 main존재 
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		new MainForm();
+	}
+}

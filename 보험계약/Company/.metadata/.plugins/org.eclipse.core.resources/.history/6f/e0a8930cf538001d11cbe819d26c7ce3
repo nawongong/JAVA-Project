@@ -1,0 +1,23 @@
+package Main;
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+import java.util.Vector;
+
+public class UpdateCustomerForm extends JFrame{
+	private static Vector<String> vc; // 가져온 데이터 벡터
+	public UpdateCustomerForm(Vector<String> vc) {
+		this.vc = vc;
+		setTitle("고객수정");
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		
+		
+	}
+	// 중간
+	class CenterP extends JPanel{
+		public CenterP() {
+			this.setLayout(new GridLayout(6,2)); // 2행 6열
+			
+		}
+	}
+}

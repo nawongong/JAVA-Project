@@ -1,0 +1,54 @@
+package DB;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.StringTokenizer;
+
+// 테이블에 데이터 삽입, 데이터파일에 있는 txt파일 이용
+public class InsertDB {
+	public InsertDB() {
+		// 데이터베이스 연결
+		Connection con = Driver_con.Driver_con();
+		// 테이블 삽입 명령어 배열
+		String [] sql = {"insert into admin values(?,?,?,?,?)", "insert into customer values(?,?,?,?,?,?)", "insert into contract values(?,?,?,?,?,?)"};
+		// 파일 이름 배열
+		String [] filename = {"admin", "customer", "contract"};
+		PreparedStatement psmt = null;
+		
+		try {
+			for(int i=0; i<filename.length; i++) {
+				psmt = con.prepareStatement(sql[i]);
+				// 한 파일씩 읽어내기
+//				Scanner scanner = new Scanner(new FileInputStream(getClass().getClassLoader().getResource(filename[i] + ".txt").toString()));
+//				scanner.nextLine();
+//				
+//				while(scanner.hasNext()) {
+//					String s = scanner.nextLine(); // 한줄씩 읽기
+//					System.out.println(s);
+//					StringTokenizer st = new StringTokenizer(s, "\t");
+//					
+//				}
+				BufferedReader in = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(filename[i] + ".txt")));
+				String str = "";
+				while((str = in.readLine())!=null) {
+					StringTokenizer st = new StringTokenizer(str, "\t");
+					System.out.println(st);
+				}
+			}	
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}

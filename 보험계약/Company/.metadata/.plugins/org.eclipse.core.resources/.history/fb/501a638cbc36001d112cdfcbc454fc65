@@ -1,0 +1,6 @@
+package DB;
+
+// 테이블에 데이터 삽입, 데이터파일에 있는 txt파일 이용
+public class InsertDB {
+
+}

@@ -1,0 +1,11 @@
+package Main;
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+import java.util.Vector;
+
+public class UpdateCustomerForm extends JFrame{
+	public UpdateCustomerForm(Vector<String> vc) {
+		
+	}
+}
