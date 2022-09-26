@@ -1,0 +1,157 @@
+package Main;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
+import java.awt.event.*;
+import java.sql.Connection;
+import java.util.Vector;
+
+public class OrderListForm extends JFrame{
+	JTextField menuname; // 메뉴명
+	JScrollPane jps;
+	JTable jt;
+	DefaultTableModel model;
+	Vector<String> colData;
+	Vector<Vector<String>> rowData;
+	private Connection con; // 데이터베이스 연결
+	String cuisine; // 종류
+	String menunames; // 메뉴명
+	String membername; //사원명
+	public OrderListForm() {
+		setTitle("결제 조회");
+		con = (Connection) Driver_con.Driver_con();
+		
+		CenterP();
+		this.add(new NorthP(), BorderLayout.NORTH);
+		this.add(jps, BorderLayout.CENTER);
+		
+		setSize(600,600);
+		setVisible(true);
+	}
+	// 상단
+	class NorthP extends JPanel{
+		private String [] s = {"조회", "새로고침","인쇄","닫기"};
+		private JButton [] btns; // 버튼
+		public NorthP() {
+			this.add(new JLabel("메뉴명:"));
+			
+			menuname = new JTextField(12);
+			this.add(menuname);
+			
+			btns = new JButton[s.length];
+			for(int i=0; i<btns.length; i++) {
+				btns[i] = new JButton(s[i]);
+				btns[i].addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						switch(e.getActionCommand()) {
+							case "조회":select(1);break;
+							case "새로고침":select(2); menuname.setText(""); break;
+							case "인쇄": printer();break;
+							case "닫기": new ManageForm(); dispose();break;
+						}
+					}
+				});
+				this.add(btns[i]);
+			}
+		}
+	}
+	public void CenterP() {
+		colData = new Vector<String>();
+		rowData = new Vector<Vector<String>>();
+		
+		colData.add("종류");
+		colData.add("메뉴명");
+		colData.add("사원명");
+		colData.add("결제수량");
+		colData.add("총결제금액");
+		colData.add("결제일");
+		
+		// 테이블 수정 불가 
+		model = new DefaultTableModel(rowData,colData) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				// TODO Auto-generated method stub
+					return false;
+				}
+			};
+		jt = new JTable(model);
+		jps = new JScrollPane(jt);
+		
+		// 전체조회, 새로고침
+		select(2);
+	}
+	// 전체조회, 새로고침 , 조회
+	public void select(int a) {
+		rowData.clear();
+		Vector<String> v;
+		String sql;
+		
+		if(a!=1) {
+			sql = "select cuisine.cuisineName, meal.mealName, member.memberName, "
+					+ "orderCount, amount, orderDate from orderlist "
+					+ "inner join member on orderlist.memberNo = member.memberNo "
+					+ "join meal on orderlist.mealNo = meal.mealNo "
+					+ "join cuisine on orderlist.cuisineNo = cuisine.cuisineNo;";
+		}else {
+			sql = "select cuisine.cuisineName, meal.mealName, member.memberName, "
+					+ "orderCount, amount, orderDate from orderlist "
+					+ "inner join member on orderlist.memberNo = member.memberNo "
+					+ "join meal on orderlist.mealNo = meal.mealNo "
+					+ "join cuisine on orderlist.cuisineNo = cuisine.cuisineNo "
+					+ "where meal.mealName like '%" + menuname.getText() + "%';";
+		}
+		
+		try {
+			Statement st = (Statement) con.createStatement();	
+			ResultSet rs = st.executeQuery(sql);
+			while(rs.next()) {
+				v = new Vector<String>();
+				for(int i=0; i<6; i++) {
+					v.add(rs.getString(i+1));
+				}	
+				rowData.add(v);
+			}
+			jt.updateUI();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void printer() {
+		JTextPane jTextPane = new JTextPane();
+		jTextPane.setContentType("text/html");
+		
+		try {
+			boolean done = jTextPane.print();
+			if(done) {
+				try {
+					// 인쇄 버튼 눌렀을때
+					FileWriter fout = new FileWriter("test4.txt");
+					for(int i=0; i<colData.size(); i++) {
+						fout.write(colData.get(i) + "\t");
+					}
+					fout.write("\r\n");
+					for(int i=0 ;i<model.getRowCount(); i++) {
+						for(int j=0; j<6; j++) {
+							fout.write(rowData.get(i).get(j)+ "\t");
+						}
+						fout.write("\r\n");
+					}
+					
+					fout.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}else {
+				// 닫기 
+			}
+		} catch (PrinterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}

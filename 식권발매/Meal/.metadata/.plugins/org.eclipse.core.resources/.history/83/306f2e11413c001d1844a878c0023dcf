@@ -1,0 +1,49 @@
+package Main;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.swing.JFrame;
+
+public class BuyForm extends JFrame{
+	private String MenuName; // 메뉴종류
+	private String MenuNum; // 메뉴 숫자
+	private Connection con; //  db연결
+	public BuyForm(String MenuName) {
+		con = Driver_con.Driver_con();
+		
+		setTitle("결제");
+		// x버튼을 클릭했을 때 메인폼으로
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {new MainForm();}
+		});
+		
+		// 받아온 메뉴 종류, 메뉴 번호
+		this.MenuName = MenuName;
+		this.MenuNum = SelectmenuNum();
+		
+		setSize(1300,1000);
+		setVisible(true);
+	}
+	// 메뉴 번호 가져오기(메뉴 종류에 따른 메뉴들을 가져올려면 필요)
+	public String SelectmenuNum() {
+		// 메뉴이름이 ~ 인 메뉴의 번호값을 가져오라는 sql명령어
+		String sql = "select cuisineNo from cuisine where cuisineName='" + MenuName + "'";
+		Statement st = null;
+		ResultSet rs = null;
+		String num = null;
+		
+		try {
+			st = con.createStatement();
+			rs = st.executeQuery(sql); // sql문 실행
+			while(rs.next()) {num = rs.getString("cuisineNo");} // 번호가져오기 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return num; // 메뉴 번호 return
+	}
+}

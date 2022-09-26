@@ -1,0 +1,86 @@
+package Main;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+// 관리자 패스워드 입력폼 , 메인폼->관리자
+public class ManageLoginForm extends JFrame{
+	private JPasswordField inputpw; // 패스워드 입력창
+	private JButton [] btns; // 숫자 1-9버튼
+	private JButton btn0; // 0 버튼
+	private String pws = "";// 입력받은 패스워드 문자열 
+	public ManageLoginForm() {
+		setTitle("관리자 패스워드 입력");
+		Container c = getContentPane();
+		
+		int r = JOptionPane.showConfirmDialog(null, new MainP(),"관리자 패스워드입력",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+		if(r==JOptionPane.OK_OPTION) {
+			if(pws.equals("0000")) { // 비밀번호가 0000이 맞는지 확인
+				new ManageForm(); // 관리 폼으로 
+			}else {
+				JOptionPane.showMessageDialog(null, "관리자 패스워드를 확인하십시오.","Message",JOptionPane.ERROR_MESSAGE);
+				new ManageLoginForm(); // 다시 비밀번호 창 띄우기
+			}
+		}else {
+			new MainForm(); // 취소버튼 클릭 시 메인화면으로
+		}
+	}
+	// optionPane안에 들어갈 입력폼
+	class MainP extends JPanel{
+		public MainP() {
+			this.setLayout(new BorderLayout());
+			this.add(new NorthP(), BorderLayout.NORTH);
+			this.add(new CenterP(), BorderLayout.CENTER);
+		}
+	}
+	// 입력폼안의 상단, 비밀번호 입력폼 
+	class NorthP extends JPanel{
+		public NorthP() {
+			inputpw = new JPasswordField(20);
+			inputpw.setEchoChar('●');
+			inputpw.setEnabled(false);
+			
+			this.add(inputpw);
+		}
+	}
+	// 입력폼안의 중간, 숫자입력 + 버튼
+	class CenterP extends JPanel{
+		public CenterP() {
+			this.setLayout(new BorderLayout());
+			
+			JPanel panel1 = new JPanel();
+			panel1.setLayout(new GridLayout(3,3));
+			btns = new JButton[9];
+			
+			for(int i=0; i<btns.length; i++) {
+				btns[i] = new JButton(Integer.toString(i+1));
+				btns[i].addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						if(inputpw.getText().length() < 4) {
+							pws = pws.concat(e.getActionCommand());
+							inputpw.setText(pws);
+						}
+					}
+				});
+				panel1.add(btns[i]);
+			}
+			
+			btn0 = new JButton("0");
+			btn0.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					if(inputpw.getText().length() < 4) {
+						pws = pws.concat(e.getActionCommand());
+						inputpw.setText(pws);
+					}
+				}
+			});
+			
+			this.add(panel1, BorderLayout.CENTER);
+			this.add(btn0, BorderLayout.SOUTH);
+		}
+	}
+}

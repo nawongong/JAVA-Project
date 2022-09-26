@@ -1,0 +1,19 @@
+package Main;
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+
+public class OrderListForm extends JFrame{
+	public OrderListForm() {
+		setTitle("결제 조회");
+		
+		con = (Connection) Driver_con.getConnection();
+		
+		CenterP();
+		this.add(new NorthP(), BorderLayout.NORTH);
+		this.add(jps, BorderLayout.CENTER);
+		
+		setSize(600,600);
+		setVisible(true);
+	}
+}

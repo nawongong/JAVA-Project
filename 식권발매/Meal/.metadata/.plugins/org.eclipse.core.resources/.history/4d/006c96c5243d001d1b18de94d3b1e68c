@@ -1,0 +1,215 @@
+package Main;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Vector;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
+// 메뉴 관리폼, 메인폼->관리자 패스워드 입력폼->관리폼-> 메뉴 관리
+public class ManageMenuForm extends JFrame{
+	private JComboBox cb1; // 메뉴 종류
+	private Vector<String> colData; // 테이블 컬럼명, 타이틀명
+	private Vector<Vector<Object>> rowData; // 테이블 데이터값 
+	private JTable jt;
+	private DefaultTableModel model;
+	Vector<Object> v; // 검색했을 때 테이블에 보여질 내용
+	Vector<Object> v2; // 선택한 메뉴 updatemenuform에 넘겨줄 벡터
+	Vector<String> v3; // 선택한 메뉴 오늘의 메뉴로 수정할 벡터
+	private Connection con; // 데이터베이스 연결
+	public ManageMenuForm() {
+		setTitle("메뉴 관리");
+		// x버튼을 클릭했을 때 이전폼으로
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {new ManageForm();}
+		});
+		
+		con = (Connection) Driver_con.Driver_con();
+		Container c = getContentPane();
+		
+		c.add(new NorthP(), BorderLayout.NORTH);
+		c.add(new CenterP(), BorderLayout.CENTER);
+		
+		setSize(600,600);
+		setVisible(true);
+	}
+	// 상단, 종류 콤보박스 + 버튼들 
+	class NorthP extends JPanel{
+		private String [] s1 = {"한식", "중식", "일식", "양식"};
+		private String [] s2 = {"검색", "수정", "삭제", "오늘의메뉴선정", "닫기"};
+		private JButton [] btns; // 버튼들
+		public NorthP() {
+			// 종류 콤보박스
+			JLabel label = new JLabel("종류:");
+			cb1 = new JComboBox(s1);
+			this.add(label);
+			this.add(cb1);
+			
+			// 버튼들
+			btns = new JButton[s2.length];
+			for(int i=0; i<s2.length; i++) {
+				btns[i] = new JButton(s2[i]);
+				btns[i].addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						switch(e.getActionCommand()) {
+							case "검색":setMenu(cb1.getSelectedIndex()+1); break;
+							case "수정":updateMenu(); break;
+							case "삭제": deleteMenu(); break;
+							case "오늘의메뉴선정": todaymenu();break;
+							case "닫기": new ManageForm(); dispose(); break;
+						}
+					}
+				});
+				this.add(btns[i]);
+			}
+		}
+	}
+	// 테이블 
+	class CenterP extends JPanel{
+		public CenterP() {
+			colData = new Vector<String>();
+			rowData = new Vector<Vector<Object>>();
+			
+			// 테이블 컬럼명, 타이틀명
+			colData.add("□"); // 체크박스
+			colData.add("menuName");
+			colData.add("price");
+			colData.add("maxCount");
+			colData.add("todayMeal");
+			
+			model = new DefaultTableModel(rowData,colData) { // 체크박스 기능 
+				public java.lang.Class<?> getColumnClass(int columnIndex) {
+					switch(columnIndex) { // 첫번째라서 0
+						case 0: return Boolean.class; // true면 체크, false는 체크x
+						default: return String.class;
+					}
+				};
+			};
+			
+			jt = new JTable(model);
+			JScrollPane jps = new JScrollPane(jt);
+			this.add(jps);
+			setMenu(cb1.getSelectedIndex()+1); // 처음에는 한식
+		}
+	}
+	// table에 메뉴 종류에 맞게 출력
+	public void setMenu(int selectnum) {
+		rowData.clear(); // 테이블 데이터값 초기화
+		String sql = "select mealName,price,maxCount,todayMeal from meal where cuisineNo=" + selectnum; // 종류에 맞는 음식리스트 뽑아내기
+		try {
+			Statement st = (Statement) con.createStatement();
+			ResultSet rs = st.executeQuery(sql);
+			while(rs.next()) {
+				v = new Vector<Object>(); // 
+				v.add(false);
+				v.add(rs.getString(1));
+				v.add(rs.getInt(2));
+				v.add(rs.getInt(3));
+				if(rs.getInt(4)==1) {
+					v.add("Y");
+				}else {
+					v.add("N");
+				}
+				rowData.add(v);
+			}
+			
+			jt.updateUI();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	// 수정
+	public void updateMenu() {
+		int cnt=0;
+		for(int i=0; i<model.getRowCount(); i++) {
+			
+			if((boolean) model.getValueAt(i, 0)) {
+				cnt++;
+				v2 = new Vector<Object>(); 
+				v2.add(cb1.getSelectedIndex()); // 0~3
+				v2.add(model.getValueAt(i, 1)); // 메뉴 이름
+				v2.add(model.getValueAt(i, 2)); // 가격
+				v2.add(model.getValueAt(i, 3)); // 조리가능수량
+			}
+		}
+		switch(cnt) {
+			case 0: JOptionPane.showMessageDialog(null, "수정할 메뉴를 선택해주세요.","Message", JOptionPane.ERROR_MESSAGE);break;
+			case 1: //new UpdateMenuForm(v2); dispose();break;
+			default: JOptionPane.showMessageDialog(null, "하나씩 수정가능합니다.","Message",JOptionPane.ERROR_MESSAGE); v2.clear();break;
+		}
+	}
+	// 삭제
+	public void deleteMenu() {
+		int cnt = 0;
+		String delete_menuname = null;
+		int select_rows=0;
+		for(int i=0; i<model.getRowCount(); i++) {
+			if((boolean)model.getValueAt(i, 0)){
+				cnt++;
+				delete_menuname=(String) model.getValueAt(i, 1);
+				select_rows = jt.getSelectedRow();
+			}
+		}
+		switch(cnt) {
+			case 0: JOptionPane.showMessageDialog(null, "삭제할 메뉴를 선택해주세요.","Message", JOptionPane.ERROR_MESSAGE); break;
+			case 1: delete(delete_menuname,select_rows);break;
+			default: JOptionPane.showMessageDialog(null, "하나씩 삭제가능합니다.","Message", JOptionPane.ERROR_MESSAGE); break;
+		}
+	}
+	// db에 삭제
+	public void delete(String delete_menuname,int select_rows) {
+		String sql = "delete from meal where mealName='" + delete_menuname + "'";
+		try {
+			Statement st = (Statement) con.createStatement();
+			int rs = st.executeUpdate(sql);
+			if(rs==1) {
+				model.removeRow(select_rows);
+				JOptionPane.showMessageDialog(null, "삭제되었습니다.","Message", JOptionPane.INFORMATION_MESSAGE);
+				jt.updateUI();
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	// 오늘의 메뉴 선정
+	public void todaymenu() {
+		int cnt = 0;
+		v3 = new Vector<String>(); 
+		for(int i=0; i<model.getRowCount(); i++) {
+			if((boolean)model.getValueAt(i, 0)) {
+				cnt++;
+				v3.add((String) model.getValueAt(i, 1)); // 메뉴 이름
+			}
+		}
+		if(cnt<=25) {
+			try {
+				for(int i=0; i<v3.size(); i++) {
+					String sql = "update meal set todayMeal=1 where mealName=?";
+					PreparedStatement psmt = (PreparedStatement) con.prepareStatement(sql);
+					psmt.setString(1, v3.get(i));
+					psmt.executeUpdate();
+					
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			JOptionPane.showMessageDialog(null, "오늘의 메뉴 선정되었습니다.","Message", JOptionPane.INFORMATION_MESSAGE);
+			setMenu(cb1.getSelectedIndex()+1);
+		}else {
+			JOptionPane.showMessageDialog(null, "25개를 초과할 수 없습니다.","Message",JOptionPane.ERROR_MESSAGE);
+		}
+	}
+}

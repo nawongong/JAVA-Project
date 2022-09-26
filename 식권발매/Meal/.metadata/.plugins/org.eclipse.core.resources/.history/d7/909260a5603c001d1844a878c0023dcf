@@ -1,0 +1,53 @@
+package Main;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
+// 식권폼 / 메인폼 -> 사용자 -> 결제폼 -> 식권폼
+public class TicketForm extends JFrame{
+	private String selectmemberNum; // 받아온 사원 번호
+	private String MenuNum; // 받아온 메뉴 번호
+	private String alltime; // 받아온 날짜
+	private DefaultTableModel model; // 받아온 테이블 
+	public TicketForm(String selectmemberNum, String MenuNum, String alltime, DefaultTableModel model) {
+		setTitle("식권");
+		// x버튼을 클릭했을 때 메인폼으로
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {new MainForm();}
+		});
+		
+		this.selectmemberNum  = selectmemberNum; // 받아온 사원 번호
+		this.MenuNum = MenuNum; // 받아온 메뉴 번호
+		this.alltime = alltime; // 받아온 날짜
+		this.model = model; // 받아온 테이블 
+		
+
+		
+		
+		setSize(300,200*cnt);
+		setVisible(true);
+		saveimg(); // size밑에 
+	}
+	// 사진 저장
+	public void saveimg() {
+		BufferedImage img = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_RGB);
+		Graphics2D g2 = img.createGraphics();
+		paint(g2);
+		try {
+			ImageIO.write(img, "jpg", new File(oneline + "-ticket.jpg"));
+		}catch (Exception e) {
+				// TODO: handle exception
+		}
+	}
+	@Override
+	public void paintComponents(Graphics g) {
+		// TODO Auto-generated method stub
+		super.paintComponents(g);
+	}
+}

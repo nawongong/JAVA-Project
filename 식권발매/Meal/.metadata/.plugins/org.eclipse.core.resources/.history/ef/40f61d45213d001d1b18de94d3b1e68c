@@ -1,0 +1,6 @@
+package Main;
+
+// 신규 메뉴 등록폼, 메인폼->관리자 패스워드 입력폼->관리폼-> 메뉴 등록
+public class NewMenuForm {
+
+}

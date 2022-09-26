@@ -1,0 +1,27 @@
+package Main;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class ChartForm extends JFrame{
+	public ChartForm() {
+		setTitle("종류별 결제현황차트");
+		// x버튼을 클릭했을 때 이전폼으로
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {new ManageForm();}
+		});
+		
+		con = (Connection) Driver_con.getConnection();
+		Container c = getContentPane();
+		
+		setCount();
+		setColor();
+		
+		c.add(new NorthP(), BorderLayout.NORTH);
+		c.add(new CenterP_R(), BorderLayout.CENTER);
+		
+		setSize(600, 500);
+		setVisible(true);
+	}
+}

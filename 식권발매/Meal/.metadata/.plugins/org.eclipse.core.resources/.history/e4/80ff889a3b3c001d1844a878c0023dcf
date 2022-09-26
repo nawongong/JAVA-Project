@@ -1,0 +1,11 @@
+package Main;
+
+// 메인폼, 메인은 여기에만 존재
+public class MainForm {
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

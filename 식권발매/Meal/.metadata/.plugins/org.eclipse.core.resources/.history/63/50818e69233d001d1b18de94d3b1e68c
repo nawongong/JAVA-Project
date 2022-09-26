@@ -1,0 +1,10 @@
+package Main;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class ManageMenuForm extends JFrame{
+	public ManageMenuForm() {
+		
+	}
+}

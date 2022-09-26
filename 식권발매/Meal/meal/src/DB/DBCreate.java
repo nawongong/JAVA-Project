@@ -1,0 +1,49 @@
+package DB;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+// DB + table 생성
+public class DBCreate {
+	public DBCreate() {
+		String url = "jdbc:mysql://localhost";
+		String id = "root";
+		String pw = "1234";
+		
+		// meal 데이터 베이스
+		String createdb = "create database if not exists meal";
+		String usedb = "use meal";
+		
+		// 테이블 생성
+		String [] createtb = {"member(memberNo int primary key not null auto_increment, memberName varchar(20), passwd varchar(4))",
+								"cuisine(cuisineNo int primary key not null auto_increment, cuisineName varchar(10))",
+								"meal(mealNo int primary key not null auto_increment, cuisineNo int, mealName varchar(20), price int, maxCount int, todayMeal tinyint(1))",
+								"orderlist(orderNo int primary key not null auto_increment, cuisineNo int, mealNo int, memberNo int, orderCount int, amount int, orderDate datetime)"
+							};
+		
+		// 데이터 베이스 연결
+		Connection con = null;
+		Statement st = null;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection(url, id, pw);
+			st = (Statement) con.createStatement();
+			
+			// 데이터 베이스 생성
+			st.executeUpdate(createdb);
+			// 데이터베이스 사용
+			st.execute(usedb);
+			// 테이블 생성
+			for(int i=0; i<createtb.length; i++) {st.executeUpdate("create table " + createtb[i]);}
+			System.out.println("테이블 생성 완료");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}

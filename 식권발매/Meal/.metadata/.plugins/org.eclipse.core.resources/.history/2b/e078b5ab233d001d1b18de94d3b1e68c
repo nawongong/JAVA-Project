@@ -1,0 +1,26 @@
+package Main;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+// 메뉴 관리폼, 메인폼->관리자 패스워드 입력폼->관리폼-> 메뉴 관리
+public class ManageMenuForm extends JFrame{
+	private Connection con; // 데이터베이스 연결
+	public ManageMenuForm() {
+		setTitle("메뉴 관리");
+		// x버튼을 클릭했을 때 이전폼으로
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {new ManageForm();}
+		});
+		
+		con = (Connection) Driver_con.getConnection();
+		Container c = getContentPane();
+		
+		c.add(new NorthP(), BorderLayout.NORTH);
+		c.add(new CenterP(), BorderLayout.CENTER);
+		
+		setSize(600,600);
+		setVisible(true);
+	}
+}

@@ -1,0 +1,21 @@
+package Main;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class BuyForm extends JFrame{
+	private String MenuName; // 메뉴종류
+	private String MenuNum; // 메뉴 숫자
+	public BuyForm(String MenuName) {
+		setTitle("결제");
+		// x버튼을 클릭했을 때 메인폼으로
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {new MainForm();}
+		});
+		
+		
+		setSize(1300,1000);
+		setVisible(true);
+	}
+}

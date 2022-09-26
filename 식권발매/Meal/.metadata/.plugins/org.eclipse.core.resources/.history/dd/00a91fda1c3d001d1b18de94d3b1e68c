@@ -1,0 +1,162 @@
+package Main;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.text.DecimalFormat;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.table.DefaultTableModel;
+
+// 식권폼 / 메인폼 -> 사용자 -> 결제폼 -> 식권폼
+public class TicketForm extends JFrame{
+	private String selectmemberNum; // 받아온 사원 번호
+	private String CuisineNum; // 받아온 메뉴종류번호
+	private String alltime; // 받아온 날짜
+	private DefaultTableModel model; // 받아온 테이블 데이터
+	private int curnum; // 현재 메뉴 번호
+	private int currow; // 현재 열번호
+	private boolean check = true; // 배경화면 체크, 처음엔 true
+	private String oneline; // 일련번호 텍스트
+	private JScrollPane jsp = new JScrollPane();
+	private JPanel panel2;
+	private Container c;
+	// 사원번호, 메뉴번호, 받아온 날짜, 
+	public TicketForm(String selectmemberNum, String CuisineNum, String alltime, DefaultTableModel model) {
+		setTitle("식권");
+		c = getContentPane();
+		this.setLayout(null); // scrollpane의 위치를 잡기 위해
+		// x버튼을 클릭했을 때 메인폼으로
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {new MainForm();}
+		});
+		
+		this.selectmemberNum  = selectmemberNum; // 받아온 사원 번호
+		this.CuisineNum = CuisineNum; // 받아온 메뉴종류번호
+		this.alltime = alltime; // 받아온 날짜
+		this.model = model; // 받아온 테이블 
+		
+		JPanel panel1 = new JPanel(); // 식권을 받아올 panel
+		panel2 = new JPanel(); // 나열된 식권들을 받아올 panel, scrollpane에 올릴 panel
+		
+		int cnt = 0; // gridlayout 열 길이 설정, 메뉴의 총 갯수
+		// 컬럼명만큼, 테이블 타이틀명만큼 / 메뉴의 총 갯수를 
+		for(int i=0; i<model.getRowCount(); i++) {cnt+=Integer.parseInt((String) model.getValueAt(i, 2));}
+		// 스크롤팬 add
+		for(int i=0; i<model.getRowCount(); i++) {
+			currow = i; // 현재 열번호를 i값으로 
+			for(int j=1; j<=Integer.parseInt((String) model.getValueAt(i, 2)); j++) {
+				curnum = j;
+				
+				panel1.setLayout(new GridLayout(cnt,1,10,10));
+				panel1.setPreferredSize(new Dimension(270,170*cnt));
+				panel1.setBackground(Color.white);
+				panel1.add(new TicketAdd());
+				
+				panel2.setBackground(Color.white);
+				panel2.setBounds(0, 0, 310, 200*cnt);
+				panel2.add(panel1);	
+			}
+			// 배경화면 체크, 메뉴가 바뀌면 배경화면색깔도 바뀜
+			if(check) {check = false;}
+			else {check=true;}
+		}
+		jsp.setViewportView(panel2); // 스크롤팬에 보여질 부분
+		jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		jsp.setBounds(0, 0, 310, 365);
+		this.add(jsp);
+		
+		if(cnt<2) {setSize(325,200);}
+		else {setSize(325,400);}
+		setVisible(true);
+		SaveImg();
+	}
+	// 식권폼이 들어갈 panel
+	class TicketAdd extends JPanel{
+		public TicketAdd() { 
+			Border blackline = BorderFactory.createLineBorder(Color.black); // 검은선
+			
+			this.setBorder(blackline);
+			this.setLayout(new BorderLayout());
+			
+			this.add(new NorthP(), BorderLayout.NORTH);
+			this.add(new CenterP(), BorderLayout.CENTER);
+			this.add(new SouthP(), BorderLayout.SOUTH);
+		}
+	}
+	// 식권폼안의 상단, 일련번호 
+	class NorthP extends JPanel{
+		public NorthP() {
+			this.setLayout(new FlowLayout(FlowLayout.LEFT)); // 왼쪽정렬
+			// 배경화면체크 
+			if(check) {this.setBackground(Color.cyan);} // true일 때
+			else {this.setBackground(Color.pink);} // false
+			
+			oneline = alltime + "-" + selectmemberNum + "-" + CuisineNum; // 일련번호 텍스트 
+			JLabel onelineNum = new JLabel(oneline); // 일련번호 라벨
+			this.add(onelineNum);
+		}
+	}
+	// 식권폼안의 중간, 식권 ~ 원
+	class CenterP extends JPanel{
+		public CenterP() {
+			this.setLayout(new GridLayout(2,1)); // 2열 1행
+			// 배경화면체크 
+			if(check) {this.setBackground(Color.cyan);}
+			else {this.setBackground(Color.pink);}
+			
+			JLabel label1 = new JLabel("식권",SwingConstants.CENTER);
+			label1.setFont(new Font("SanSerif", Font.BOLD, 20));
+			
+			int price = Integer.parseInt((String) model.getValueAt(currow, 3))/Integer.parseInt((String) model.getValueAt(currow, 2)); // 가격
+			DecimalFormat df = new DecimalFormat("###,###"); // 천단위 , 포멧
+			String format_price = df.format(price);
+			JLabel label2 = new JLabel(format_price + "원", SwingConstants.CENTER);
+			label2.setFont(new Font("SanSerif", Font.BOLD, 20));
+			
+			this.add(label1);
+			this.add(label2);
+		}
+	}
+	// 식품폼안의 하단, 메뉴명 현재번호/전체수량
+	class SouthP extends JPanel{
+		public SouthP() {
+			this.setLayout(new GridLayout(1,2)); // 2행 1열
+			// 배경화면체크
+			if(check) {this.setBackground(Color.cyan);}
+			else {this.setBackground(Color.pink);}
+			
+			String menuname = (String) model.getValueAt(currow, 1);
+			int allCount = Integer.parseInt((String) model.getValueAt(currow, 2));
+			JLabel label1 = new JLabel("메뉴:" + menuname, SwingConstants.LEFT);
+			JLabel label2 = new JLabel( curnum + "/" + allCount, SwingConstants.RIGHT);
+			
+			this.add(label1);
+			this.add(label2);
+			
+		}
+	}
+	// 사진 저장
+	public void SaveImg() {
+		JComponent view = (JComponent) jsp.getViewport().getView();
+		
+		System.out.println(view.getWidth());
+		System.out.println(view.getHeight());
+		BufferedImage img = new BufferedImage(view.getWidth(),view.getHeight(),BufferedImage.TYPE_INT_RGB);
+		Graphics2D g2 = img.createGraphics();
+		paintAll(g2);
+		try {
+			ImageIO.write(img, "jpg", new File("imgs/"+ oneline + "-ticket.jpg"));
+		}catch (Exception e) {
+				// TODO: handle exception
+		}
+	}
+	@Override
+	public void paintComponents(Graphics g) {
+		// TODO Auto-generated method stub
+		super.paintComponents(g);
+	}
+}

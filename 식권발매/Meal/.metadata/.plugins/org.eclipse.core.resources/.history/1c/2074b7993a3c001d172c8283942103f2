@@ -1,0 +1,46 @@
+package DB;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Scanner;
+import java.util.StringTokenizer;
+
+public class InsertDB {
+	public InsertDB() {
+		Connection con = Driver_con.Driver_con();
+		// 각 테이블명에 맞는 insert sql문
+		String [] sql = {"insert into cuisine values(?,?)", "insert into meal values(?,?,?,?,?,?)", "insert into member values(?,?,?)", "insert into orderlist values(?,?,?,?,?,?,?)"};
+		// 파일이름
+		String [] filename = {"cuisine", "meal", "member", "orderlist"};
+		PreparedStatement psmt = null;
+		try {
+			for(int i=0; i<filename.length; i++) {
+				psmt = (PreparedStatement) con.prepareStatement(sql[i]);
+				Scanner scanner = new Scanner(new FileInputStream("C:\\Users\\pc 1-12\\Desktop\\FoodTicket\\MealSetting\\bin\\" + filename[i] + ".txt"));
+				scanner.nextLine();
+				while(scanner.hasNext()) {
+					String s = scanner.nextLine();
+					StringTokenizer st = new StringTokenizer(s, "\t");
+					int count = st.countTokens();
+					String [] sr = new String[count];
+					
+					for(int j=0; j<count; j++) {
+						sr[j] = st.nextToken();
+						psmt.setString(j+1, sr[j]);
+					}
+					psmt.executeUpdate();
+				}
+			}
+			System.out.println("테이블 insert 완료");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}

@@ -1,0 +1,16 @@
+package Main;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
+// 식권폼 / 메인폼 -> 사용자 -> 결제폼 -> 식권폼
+public class TicketForm extends JFrame{
+	private String selectmemberNum; // 받아온 사원 번호
+	private String MenuNum; // 받아온 메뉴 번호
+	private String alltime; // 받아온 날짜
+	private DefaultTableModel model; // 받아온 테이블 
+	public TicketForm(String selectmemberNum, String MenuNum, String alltime, DefaultTableModel model) {
+		setTitle("식권");
+	}
+}

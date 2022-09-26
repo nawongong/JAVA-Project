@@ -1,0 +1,28 @@
+package Main;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class CuisineForm extends JFrame{
+	// 이미지 경로
+	private String [] img = {"menu_1.png", "menu_2.png", "menu_3.png","menu_4.png"};
+	private String [] menu = {"한식", "중식", "일식", "양식"};
+	private ImageIcon [] imgs;
+	private JButton [] btns;
+	public CuisineForm() {
+		
+		// x버튼을 클릭했을 때 메인폼으로
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {new MainForm();}
+		});
+	}
+	// 타이틀, 상단
+	class NorthP extends JPanel{
+		public NorthP() {
+			JLabel label = new JLabel("식권 발매 프로그램");
+			label.setFont(new Font("SanSerif", Font.BOLD, 30));
+			this.add(label);
+		}
+	}
+}

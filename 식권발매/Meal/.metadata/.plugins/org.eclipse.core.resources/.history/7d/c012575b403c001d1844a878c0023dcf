@@ -1,0 +1,29 @@
+package Main;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.Connection;
+
+import javax.swing.JFrame;
+
+public class BuyForm extends JFrame{
+	private String MenuName; // 메뉴종류
+	private String MenuNum; // 메뉴 숫자
+	private Connection con; //  db연결
+	public BuyForm(String MenuName) {
+		con = Driver_con.Driver_con();
+		
+		setTitle("결제");
+		// x버튼을 클릭했을 때 메인폼으로
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {new MainForm();}
+		});
+		
+		// 받아온 메뉴 종류
+		this.MenuName = MenuName;
+		
+		
+		setSize(1300,1000);
+		setVisible(true);
+	}
+}

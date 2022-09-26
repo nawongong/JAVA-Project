@@ -1,0 +1,106 @@
+package Main;
+import java.awt.event.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Vector;
+import java.awt.*;
+import javax.swing.*;
+
+public class BuyForm extends JFrame{
+	private String CuisineName; // 메뉴종류
+	private String CuisineNum; // 메뉴 숫자
+	private Connection con; //  db연결
+	private Vector<BtnsC> Menubtns; //버튼 메뉴 클래스를 담을 벡터
+	public BuyForm(String CuisineName) {
+		con = Driver_con.Driver_con();
+		
+		setTitle("결제");
+		// x버튼을 클릭했을 때 메인폼으로
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {new MainForm();}
+		});
+		
+		// 받아온 메뉴 종류, 메뉴 번호
+		this.CuisineName = CuisineName;
+		this.CuisineNum = SelectCuisineNum();
+		// 메뉴 번호에 따른 메뉴리스트 값을 가져옴
+		SelectMeal(); 
+		
+		setSize(1300,1000);
+		setVisible(true);
+	}
+	// 메뉴 번호 가져오기(메뉴 종류에 따른 메뉴들을 가져올려면 필요)
+	public String SelectCuisineNum() {
+		// 메뉴이름이 ~ 인 메뉴의 번호값을 가져오라는 sql명령어
+		String sql = "select cuisineNo from cuisine where cuisineName='" + CuisineName + "'";
+		Statement st = null;
+		ResultSet rs = null;
+		String num = null;
+		
+		try {
+			st = con.createStatement();
+			rs = st.executeQuery(sql); // sql문 실행
+			while(rs.next()) {num = rs.getString("cuisineNo");} // 번호가져오기 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return num; // 메뉴 번호 return
+	}
+	// 메뉴 종류에 따른 메뉴 select, 메뉴 버튼 벡터 생성
+	public void SelectMeal() {
+		// 메뉴 분류 번호가 ~ 인 메뉴정보를 가져오라는 sql 명령어
+		String sql = "select * from meal where cuisineNo='" + CuisineNum + "'";
+		Statement st = null;
+		ResultSet rs = null;
+		try {
+			st = con.createStatement();
+			rs = st.executeQuery(sql); // sql 명령어 실행
+			
+			Menubtns = new Vector<BtnsC>();  // 메뉴 버튼들을 벡터값에 클래스로 저장
+			while(rs.next()) { 
+				// 메뉴종류번호, 메뉴명, 가격, 조리가능수량, 오늘의메뉴
+				Menubtns.add(new BtnsC(rs.getInt("mealNo"),rs.getString("mealName"), rs.getString("price"), rs.getInt("maxCount"), rs.getInt("todayMeal")));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	// 버튼 생성 클래스
+	class BtnsC extends JButton{
+		// 메뉴종류번호, 메뉴명, 가격, 조리가능수량, 오늘의메뉴 값을 받아옴
+		public BtnsC(int mealNo, String mealName, String price, int maxCount, int todayMeal) {
+			this.setEnabled(false); // 일반적으론 버튼 비활성화
+			// 조리가능수가 0이아니고 오늘의 메뉴가 0이 아닐때, 버튼 활성화
+			if(maxCount!=0 && todayMeal!=0) {this.setEnabled(true);}
+			this.setText("<html><center>"+ mealName + "<br><br>" + price + "원</html>"); // 버튼 텍스트값
+			// 버튼 클릭했을 때 이벤트
+			this.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					JButton clickbtn = (JButton) e.getSource(); // 클릭한 버튼의 값을 가져옴
+					// 선택품목, 수량 초기화
+					selectproduct.setText(mealName);
+					selectnum_s = "";
+					selectproduct_num.setText(selectnum_s);
+					
+					// 메뉴번호, 조리가능수량, 메뉴이름,메뉴 금액 전역변수에 담기
+					mealNum = mealNo;
+					maxCountnum = maxCount;
+					selectmealName = mealName;
+					menuprice = Integer.parseInt(price);
+				}
+			});
+		}
+	}
+	// 상단 
+	class NorthP extends JPanel{
+		public NorthP() {
+			
+		}
+	}
+}

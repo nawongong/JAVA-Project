@@ -1,0 +1,11 @@
+package Main;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+// 메뉴 관리폼, 메인폼->관리자 패스워드 입력폼->관리폼-> 메뉴 관리
+public class ManageMenuForm extends JFrame{
+	public ManageMenuForm() {
+		
+	}
+}

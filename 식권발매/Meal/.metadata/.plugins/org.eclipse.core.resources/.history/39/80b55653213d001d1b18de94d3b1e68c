@@ -1,0 +1,14 @@
+package Main;
+
+// 신규 메뉴 등록폼, 메인폼->관리자 패스워드 입력폼->관리폼-> 메뉴 등록
+public class NewMenuForm {
+	setTitle("신규 메뉴 등록");
+	this.addWindowListener(new windowev2()); // 창을 닫았을때 메인폼으로
+	
+	con = (Connection) Driver_con.getConnection();
+	Container c = getContentPane();
+	
+	c.add(new MainP());
+	setSize(350,200);
+	setVisible(true);
+}

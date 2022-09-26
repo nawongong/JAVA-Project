@@ -1,0 +1,27 @@
+package DB;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class Driver_con {
+	public static Connection getConnection() {
+		String url = "jdbc:mysql://localhost/meal";
+		String id = "root";
+		String pw = "1234";
+		Connection con = null;
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = (Connection)DriverManager.getConnection(url, id, pw);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return con;
+	}
+}

@@ -1,0 +1,69 @@
+package Main;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+// 메인폼에서 -> 사용자버튼 클릭시 나오는 화면
+public class CuisineForm extends JFrame{
+	private String [] img_s = {"menu_1.png", "menu_2.png", "menu_3.png","menu_4.png"}; // 이미지 경로
+	private String [] menu_s = {"한식", "중식", "일식", "양식"}; // 메뉴 이름
+	private ImageIcon [] img; // 이미지가 들어갈 곳
+	private JButton [] btns; // 버튼들
+	public CuisineForm() {
+		setTitle("식권 발매 프로그램");
+		// x버튼을 클릭했을 때 메인폼으로
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {new MainForm();}
+		});
+		
+		this.add(new NorthP(), BorderLayout.NORTH);
+		this.add(new NorthP(), BorderLayout.NORTH);
+		this.add(new NorthP(), BorderLayout.NORTH);
+		
+		setSize(500,800);
+		setVisible(true);
+	}
+	// 타이틀, 상단
+	class NorthP extends JPanel{
+		public NorthP() {
+			JLabel label = new JLabel("식권 발매 프로그램");
+			label.setFont(new Font("SanSerif", Font.BOLD, 30));
+			this.add(label);
+		}
+	}
+	// 중간
+	class CenterP extends JPanel{
+		public CenterP() {
+			JTabbedPane tab = new JTabbedPane();
+			tab.add("메뉴",new ImgP());
+			this.add(tab);
+		}
+	}
+	// 이미지 버튼을 만드는 panel
+	class ImgP extends JPanel{
+		public ImgP() {
+			this.setLayout(new GridLayout(2,2)); // 2행 2열
+			
+			img = new ImageIcon[img.length]; // 이미지 아이콘 배열 생성
+			btns = new JButton[img.length]; // 버튼 배열 생성
+			
+			for(int i=0; i<img.length; i++) {
+				img[i] = new ImageIcon(getClass().getClassLoader().getResource(img_s[i])); // 이미지 아이콘안에 이미지 경로안에 있는 이미지를 넣기
+				btns[i] = new JButton(img[i]); // 버튼 안에 이미지 아이콘 넣기
+				btns[i].setToolTipText(menu_s[i]); // 버튼에 툴팁(마우스 포커스가 가면 글자나오게)
+				// 버튼 클릭시 각 메뉴에 맞는 결제폼으로 가도록
+				btns[i].addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						JButton button = (JButton) e.getSource(); // 버튼
+						dispose();
+						
+					}
+				});
+				this.add(btns[i]);
+			}
+		}
+	}
+}

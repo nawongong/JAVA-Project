@@ -1,0 +1,11 @@
+package Main;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+// 관리자 패스워드 입력폼 , 메인폼->관리자
+public class ManageLoginForm extends JFrame{
+	public ManageLoginForm() {
+		
+	}
+}
